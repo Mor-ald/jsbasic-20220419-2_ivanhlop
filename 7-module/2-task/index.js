@@ -1,57 +1,69 @@
-import createElement from "../../assets/lib/create-element.js";
-let modalBody = document.createElement("div");
+import createElement from '../../assets/lib/create-element.js';
+
 export default class Modal {
   constructor() {
-    this.render();
+    this.elem = this.createModal();
+    this.createEvents();
   }
-  close() {
-    document.querySelector("body").classList.remove("is-modal-open");
-    this.elem.remove();
+
+  createModal() {
+    return createElement(
+      `
+      <div class="modal">
+        <div class="modal__overlay"></div>
+        <div class="modal__inner">
+          <div class="modal__header">
+            <button type="button" class="modal__close">
+              <img src="/assets/images/icons/cross-icon.svg" alt="close-icon" />
+            </button>
+            <h3 class="modal__title">
+            </h3>
+          </div>
+          <div class="modal__body">
+          </div>
+        </div>
+      </div>
+      `
+    );
   }
-  onBtnCloseClick(event) {
-    if (event.target.closest("button")) {
-      document.querySelector("body").classList.remove("is-modal-open");
-      document.querySelector(".modal").remove();
-    }
-  }
-  onEscClick(event) {
-    if (event.code === "Escape") {
-      document.querySelector("body").classList.remove("is-modal-open");
-      document.querySelector(".modal").remove();
-    }
+
+  open() {
+    let body = document.querySelector('body');
+    body.className = 'is-modal-open';
+
+    body.append(this.elem);
   }
   setTitle(title) {
-    this.elem.querySelector(".modal__title").innerHTML = title;
+    let h3ModalTitle = this.elem.querySelector('.modal__title');
+    h3ModalTitle.innerHTML = title;
   }
-  setBody(modalBody) {
-    this.elem.querySelector(".modal__body").append(modalBody);
+  setBody(node) {
+    let divModalBody = this.elem.querySelector('.modal__body');
+    divModalBody.append(node);
   }
-  render() {
-    const template = `
-    <div class="modal__overlay"></div>
-    <div class="modal__inner">
-    <div class="modal__header">
-      <button type="button" class="modal__close">
-        <img src="/assets/images/icons/cross-icon.svg" alt="close-icon" />
-      </button>
-      <h3 class="modal__title">
-  
-      </h3>
-    </div>
-    <div class="modal__body">
-    A сюда нужно добавлять содержимое тела модального окна
-    </div>
-  </div>
-</div>
-`;
-    this.elem = document.createElement("div");
-    this.elem.classList.add("modal");
-    this.elem.innerHTML = template;
+  close() {
+    let body = document.querySelector('body');
+    body.className = '';
+    body.innerHTML = '';
+
+    document.onkeydown = null;
   }
-  open() {
-    document.querySelector("body").append(this.elem);
-    document.querySelector("body").classList.add("is-modal-open");
-    this.elem.addEventListener("click", this.onBtnCloseClick);
-    document.addEventListener("keydown", this.onEscClick);
+
+  createEvents() {
+    let button = this.elem.querySelector('.modal__close');
+
+    button.addEventListener('click', () => {
+      this.close();
+    });
+
+    document.onkeydown = function (event) {
+      if (event.code === 'Escape') {
+        let body = document.querySelector('body');
+        body.className = '';
+        body.innerHTML = '';
+
+        document.onkeydown = null;
+      }
+    };
   }
 }
