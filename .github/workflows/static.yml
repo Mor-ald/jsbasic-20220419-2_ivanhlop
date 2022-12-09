@@ -25,7 +25,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ 9-module/2-task/ }}
+      url: ${{ https://github.com/Mor-ald/jsbasic-20220419-2_ivanhlop/tree/master/9-module/2-task }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
